@@ -6,7 +6,7 @@ let prefix = "!";
 function main() {
   const client = new Client({
       name: "CommanderBox",
-      lobbyCode: ""
+      lobbyCode: "LbCd3hrR"
   });
 
   const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));

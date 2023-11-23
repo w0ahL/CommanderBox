@@ -27,12 +27,27 @@ module.exports = {
 
         setTimeout(() => {
           client.sendMessage(`${prefix}userinfo - gives you basic user information, you must include a username.`);
+          client.sendMessage(`${prefix}spam - spams chat (<message> <time (seconds)> <cooldown (seconds)>).`);
         }, 16000)
+
+        setTimeout(() => {
+          client.sendMessage(`${prefix}ban - bans a user. you must include a username.`);
+          client.sendMessage(`${prefix}kick - kicks a user. you must include a username.`);
+        }, 21000)
+
+        setTimeout(() => {
+          client.sendMessage(`${prefix}clear - clears current drawing`);
+          client.sendMessage(`${prefix}endGame - ends the game.`);
+        }, 26000)
+
+        setTimeout(() => {
+          client.sendMessage(`${prefix}startGame - starts the game.`);
+        }, 32000)
 
         setTimeout(() => {
           client.sendMessage(`${prefix}leave - disconnects the bot & quits the program.`);
           client.sendMessage(`The current prefix is "${prefix}".`)
-        }, 22000)
+        }, 36000)
 
         return;
       }

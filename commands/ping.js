@@ -4,6 +4,7 @@ module.exports = {
     execute(data, client, prefix) {
         if (data.msg.startsWith(`${prefix}ping`)) {
             client.sendMessage('Pong');
+            return;
         }
     },
 };
