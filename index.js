@@ -1,25 +1,55 @@
 const { Client } = require("skribbler");
 
+let prefix = "!";
+
 function main() {
   const client = new Client({
       name: "CommanderBox",
-      lobbyCode: ""
+      lobbyCode: "y1CK2v6n"//,
+      // serverURL: "wss://server3.skribbl.io:5003"
   });
 
   client.on("connect", () => {
       console.log(`Connected to ${client.lobbyId}\nCurrent Player Count: ${client.players.length}`)
       client.sendMessage('CommanderBox connected successfully');
-      client.sendMessage('Use !help to see all of my commands.')
+      client.sendMessage(`Use ${prefix}help to see all of my commands.`)
   });
 
   client.on("text", (data) => {
-      if (data.msg === '!ping') {
+      if (data.msg.startsWith(`!ping`)) {
           client.sendMessage('Pong');
 
           return;
       }
 
-      if (data.msg === '!pick') {
+    if (data.msg.startsWith(`${prefix}votekick`)) {
+        const username = data.msg.split(' ')[1]; // Assuming that the username is the second word after the !votekick command
+        if (username) {
+            const player = client.players.find(player => player.name === username);
+            if (player) {
+                client.votekick(player.id);
+                client.sendMessage(`I voted to kick ${player.name}.`)
+            } else {
+                client.sendMessage('Invalid username, try again.');
+            }
+        } else {
+            client.sendMessage('Please specify a valid username after !votekick command');
+        }
+        return;
+    }
+
+    if (data.msg.startsWith(`${prefix}prefix`)) {
+        const newPrefix = data.msg.split(' ')[1]; // Assuming the new prefix is the second word after the !setprefix command
+        if (newPrefix) {
+            prefix = newPrefix; // Update the prefix
+            client.sendMessage(`Prefix updated to: ${prefix}`);
+        } else {
+            client.sendMessage('Please specify a new prefix after !prefix command');
+        }
+        return;
+    }
+
+      if (data.msg.startsWith(`${prefix}pick`)) {
           client.sendMessage(`Action completed, this'll happen automatically from now on.`);
 
           client.on("chooseWord", (word) => {
@@ -31,7 +61,7 @@ function main() {
           return;
       }
 
-      if (data.msg === '!draw') {
+      if (data.msg.startsWith(`${prefix}draw`)) {
           const data = require("./drawings/discord.json");
 
           let draw = [];
@@ -49,7 +79,7 @@ function main() {
           return;
       }
 
-      if (data.msg === '!say') {
+      if (data.msg.startsWith(`${prefix}say`)) {
           client.sendMessage('Copying is now enabled for !say command.');
 
           client.on('text', (data) => {
@@ -62,7 +92,7 @@ function main() {
         return;
       }
 
-      if (data.msg === '!copy') {
+      if (data.msg.startsWith(`${prefix}copy`)) {
           if (copiedMessage !== "") {
               client.sendMessage(copiedMessage); // Send the copied message
           } else {
@@ -72,7 +102,7 @@ function main() {
         return;
       }
 
-      if (data.msg === '!info') {
+      if (data.msg.startsWith(`${prefix}info`)) {
         client.sendMessage('Grabbing the latest information...');
 
         setTimeout(() => {
@@ -92,33 +122,38 @@ function main() {
         return;
       }
 
-      if (data.msg === '!help') {
+      if (data.msg.startsWith(`${prefix}help`)) {
         client.sendMessage('Grabbing the latest help...');
 
         setTimeout(() => {
-          client.sendMessage(`ping returns with pong`);
-          client.sendMessage(`pick automatically picks a word when drawing; improving speeds & making people less mad.`);
+          client.sendMessage(`ping - returns with pong`);
+          client.sendMessage(`pick - automatically picks a word when drawing; improving speeds & making people less mad.`);
         }, 3000)
 
         setTimeout(() => {
-          client.sendMessage(`draw draws the discord this was made by.`);
-          client.sendMessage(`say live logging of other messages`);
+          client.sendMessage(`draw - draws the discord this was made by.`);
+          client.sendMessage(`say - live logging of other messages`);
         }, 6000)
 
         setTimeout(() => {
-          client.sendMessage('info gives you basic information about the lobby.');
-          client.sendMessage('help gives you information on how to use CommanderBox');
+          client.sendMessage('info - gives you basic information about the lobby.');
+          client.sendMessage('help - gives you information on how to use CommanderBox');
         }, 9000)
 
         setTimeout(() => {
-          client.sendMessage('leave disconnects the bot & quits the program.');
-          client.sendMessage(`The current prefix is "!", that's what you put in front of the commands to use them with.`)
+          client.sendMessage('votekick - vote kicks a user, you must include a username.');
+          client.sendMessage('prefix - changes the prefix.');
         }, 12000)
+
+        setTimeout(() => {
+          client.sendMessage('leave - disconnects the bot & quits the program.');
+          client.sendMessage(`The current prefix is "${prefix}", that's what you put in front of the commands to use them with.`)
+        }, 16000)
 
         return;
       }
 
-      if (data.msg === '!leave') {
+      if (data.msg.startsWith(`${prefix}leave`)) {
           client.sendMessage('Disconnected by Command Execution.');
 
           setTimeout(() => {
@@ -128,7 +163,7 @@ function main() {
 
           return;
       } else {
-          if (data.msg.startsWith('!')) {
+          if (data.msg.startsWith(`${prefix}`)) {
               client.sendMessage('Invalid command. Please try again or use !help.');
           }
       }
