@@ -18,7 +18,7 @@ function main() {
     if (data.player.name === client.options.name) return;
     
     if (data.msg.startsWith(`${prefix}prefix`)) {
-        const newPrefix = data.msg.split(' ')[1]; // Assuming the new prefix is the second word after the !setprefix command
+        const newPrefix = data.msg.split(' ')[1]; // Assuming the new prefix is the second word after the !prefix command
       if (newPrefix.match(/[!@#$%^&*_\-+=:.<>/?\\]/)) {
             prefix = newPrefix; // Update the prefix
             client.sendMessage(`Prefix updated to: ${prefix}`);
@@ -165,9 +165,13 @@ function main() {
         }, 12000)
 
         setTimeout(() => {
+          client.sendMessage(`${prefix}userinfo - gives you basic user information, you must include a username.`);
+        }, 16000)
+
+        setTimeout(() => {
           client.sendMessage(`${prefix}leave - disconnects the bot & quits the program.`);
           client.sendMessage(`The current prefix is "${prefix}".`)
-        }, 16000)
+        }, 22000)
 
         return;
       }
