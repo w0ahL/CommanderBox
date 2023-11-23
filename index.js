@@ -15,6 +15,8 @@ function main() {
   });
 
   client.on("text", (data) => {
+    if (data.player.name === client.options.name) return;
+    
     if (data.msg.startsWith(`${prefix}prefix`)) {
         const newPrefix = data.msg.split(' ')[1]; // Assuming the new prefix is the second word after the !setprefix command
       if (newPrefix.match(/[!@#$%^&*_\-+=:.<>/?\\]/)) {
@@ -143,28 +145,28 @@ function main() {
         client.sendMessage('Grabbing the latest help...');
 
         setTimeout(() => {
-          client.sendMessage(`ping - returns with pong`);
-          client.sendMessage(`pick - automatically picks a word when drawing; improving speeds & making people less mad.`);
+          client.sendMessage(`${prefix}ping - returns with pong`);
+          client.sendMessage(`${prefix}pick - automatically picks a word when drawing; improving speeds & making people less mad.`);
         }, 3000)
 
         setTimeout(() => {
-          client.sendMessage(`draw - draws the discord this was made by.`);
-          client.sendMessage(`say - says what you want it to say`);
+          client.sendMessage(`${prefix}draw - draws the discord this was made by.`);
+          client.sendMessage(`${prefix}say - says what you want it to say`);
         }, 6000)
 
         setTimeout(() => {
-          client.sendMessage('info - gives you basic information about the lobby.');
-          client.sendMessage('help - gives you information on how to use CommanderBox');
+          client.sendMessage(`${prefix}info - gives you basic information about the lobby.`);
+          client.sendMessage(`${prefix}help - gives you information on how to use CommanderBox`);
         }, 9000)
 
         setTimeout(() => {
-          client.sendMessage('votekick - vote kicks a user, you must include a username.');
-          client.sendMessage('prefix - changes the prefix.');
+          client.sendMessage(`${prefix}votekick - vote kicks a user, you must include a username.`);
+          client.sendMessage(`${prefix}prefix - changes the prefix.`);
         }, 12000)
 
         setTimeout(() => {
-          client.sendMessage('leave - disconnects the bot & quits the program.');
-          client.sendMessage(`The current prefix is "${prefix}", that's what you put in front of the commands to use them with.`)
+          client.sendMessage(`${prefix}leave - disconnects the bot & quits the program.`);
+          client.sendMessage(`The current prefix is "${prefix}".`)
         }, 16000)
 
         return;
