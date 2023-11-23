@@ -5,7 +5,7 @@ let prefix = "!";
 function main() {
   const client = new Client({
       name: "CommanderBox",
-      lobbyCode: "y1CK2v6n"
+      lobbyCode: ""
   });
 
   client.on("connect", () => {
@@ -43,7 +43,37 @@ function main() {
                 client.sendMessage('Invalid username, try again.');
             }
         } else {
-            client.sendMessage('Please specify a valid username after !votekick command');
+            client.sendMessage(`Please specify a valid username after ${prefix}votekick command`);
+        }
+        return;
+    }
+
+    if (data.msg.startsWith(`${prefix}userinfo`)) {
+        const username = data.msg.split(' ')[1]; // Assuming that the username is the second word after the !userinfo command
+        if (username) {
+            const player = client.players.find(player => player.name === username);
+            if (player) {
+                client.sendMessage(`Getting the latest on ${player.name}...`);
+
+              setTimeout(() => {
+                client.sendMessage(`Name: ${player.name}`);
+                client.sendMessage(`ID: ${player.id}`);
+              }, 3000)
+              
+              setTimeout(() => {
+                client.sendMessage(`Score: ${player.score}`);
+                client.sendMessage(`Avatar: [${player.avatar}]`);
+              }, 6000)
+
+              setTimeout(() => {
+                client.sendMessage(`Guessed: ${player.guessed}`);
+                client.sendMessage(`Flags: ${player.flags}`);
+              }, 9000)
+            } else {
+                client.sendMessage('Invalid username, try again.');
+            }
+        } else {
+            client.sendMessage(`Please specify a valid username after ${prefix}userinfo command`);
         }
         return;
     }
@@ -79,24 +109,12 @@ function main() {
       }
 
       if (data.msg.startsWith(`${prefix}say`)) {
-          client.sendMessage('Copying is now enabled for !say command.');
-
-          client.on('text', (data) => {
-              if (data.msg === 'Copying is now enabled for !say command.') return;
-              if (data.msg) {
-                  copiedMessage = data.msg; // Save the message content
-              }
-          });
-        
-        return;
-      }
-
-      if (data.msg.startsWith(`${prefix}copy`)) {
-          if (copiedMessage !== "") {
-              client.sendMessage(copiedMessage); // Send the copied message
-          } else {
-              client.sendMessage('No message to copy, do !say then say a message after usage.');
-          }
+        const msg = data.msg.split(' ')[1]; // Assuming that the username is the second word after the !say command
+        if(msg) {
+          client.sendMessage(msg);
+        } else {
+          client.sendMessage("There isn't a message that you inputted to send, silly!");
+        }
         
         return;
       }
@@ -131,7 +149,7 @@ function main() {
 
         setTimeout(() => {
           client.sendMessage(`draw - draws the discord this was made by.`);
-          client.sendMessage(`say - live logging of other messages`);
+          client.sendMessage(`say - says what you want it to say`);
         }, 6000)
 
         setTimeout(() => {
