@@ -5,7 +5,7 @@ let prefix = "!";
 function main() {
   const client = new Client({
       name: "CommanderBox",
-      lobbyCode: "y1CK2v6n"//,
+      lobbyCode: ""//,
       // serverURL: "wss://server3.skribbl.io:5003"
   });
 
@@ -112,7 +112,7 @@ function main() {
 
         setTimeout(() => {
           client.sendMessage(`Lobby Code: ${client.lobbyId}`);
-          client.sendMessage(`Version: v1.0.0`);
+          client.sendMessage(`Version: v1.0.1`);
         }, 6000)
 
         setTimeout(() => {
