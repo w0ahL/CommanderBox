@@ -8,10 +8,19 @@ function main() {
       lobbyCode: ""
   });
 
+  if(client.options.name === "") {
+    client.options.name = "CommanderBox";
+  }
+
+  if(client.options.name !== "CommanderBox") {
+    client.options.name = "CommanderBox";
+  }
+
   client.on("connect", () => {
       console.log(`Connected to ${client.lobbyId}\nCurrent Player Count: ${client.players.length}`);
+    
       client.sendMessage('CommanderBox connected successfully');
-      client.sendMessage(`Use ${prefix}help to see the list of my commands.`)''
+      client.sendMessage(`Use ${prefix}help to see the list of my commands.`);
   });
 
   client.on("text", (data) => {
@@ -137,7 +146,7 @@ function main() {
 
         setTimeout(() => {
           client.sendMessage(`Lobby Code: ${client.lobbyId}`);
-          client.sendMessage(`Version: v1.0.1`);
+          client.sendMessage(`Version: v1.0.2`);
         }, 6000)
 
         setTimeout(() => {
@@ -201,7 +210,10 @@ function main() {
   client.on("disconnect", (data) => {
       console.log("Disconnected", data);
 
-      main();
+      setTimeout(() => {
+        console.log('Rejoining in 3 seconds...');
+        main();
+      }, 3000)
   });
 }
 
