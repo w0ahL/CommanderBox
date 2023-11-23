@@ -3,11 +3,11 @@ module.exports = {
     description: 'Draw command',
     execute(data, client, prefix) {
       if (data.msg.startsWith(`${prefix}draw`)) {
-          const data = require("./drawings/discord.json");
+          const discord = require("../drawings/discord.json");
 
           let draw = [];
 
-          for (const drawing of data) {
+          for (const drawing of discord) {
             draw.push(drawing);
 
             if(draw.length < 7) continue;

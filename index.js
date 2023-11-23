@@ -19,6 +19,8 @@ function main() {
   
   for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
+    const aliases = command.aliases || [];    
+    
       client.on("text", (data) => {
           if (data.player.name === client.options.name) return;
     
