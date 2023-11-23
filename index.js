@@ -1,12 +1,9 @@
 const { Client } = require("skribbler");
 
-let randomPort = Math.floor(Math.random() * 5) + 5001;
-
 function main() {
   const client = new Client({
       name: "CommanderBox",
-      lobbyCode: "87CFzkn1"
-      // serverURL: `https://server3.skribbl.io:${randomPort}`
+      lobbyCode: ""
   });
 
   client.on("connect", () => {
