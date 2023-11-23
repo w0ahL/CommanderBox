@@ -9,9 +9,9 @@ function main() {
   });
 
   client.on("connect", () => {
-      console.log(`Connected to ${client.lobbyId}\nCurrent Player Count: ${client.players.length}`)
+      console.log(`Connected to ${client.lobbyId}\nCurrent Player Count: ${client.players.length}`);
       client.sendMessage('CommanderBox connected successfully');
-      client.sendMessage(`Use ${prefix}help to see all of my commands.`)
+      client.sendMessage(`Use ${prefix}help to see the list of my commands.`)''
   });
 
   client.on("text", (data) => {
@@ -19,12 +19,18 @@ function main() {
     
     if (data.msg.startsWith(`${prefix}prefix`)) {
         const newPrefix = data.msg.split(' ')[1]; // Assuming the new prefix is the second word after the !prefix command
-      if (newPrefix.match(/[!@#$%^&*_\-+=:.<>/?\\]/)) {
-            prefix = newPrefix; // Update the prefix
-            client.sendMessage(`Prefix updated to: ${prefix}`);
-        } else {
-            client.sendMessage('Please specify a new prefix after !prefix command. (only accepting "/[!@#$%^&*_\-+=:.<>/?\\]/")');
-        }
+      
+      if (typeof newPrefix !== "string") {
+        client.sendMessage('Error: Prefix is not defined.');
+        return;
+      }
+      
+      if (newPrefix.match(/^[!@#$%^&*_\-+=:.<>/?\\]+$/)) {
+          prefix = newPrefix; // Update the prefix
+          client.sendMessage(`Prefix updated to: ${prefix}`);
+      } else {
+          client.sendMessage('Please specify a new prefix after !prefix command. (no letters or numbers)');
+      }
         return;
     }
     
@@ -45,7 +51,7 @@ function main() {
                 client.sendMessage('Invalid username, try again.');
             }
         } else {
-            client.sendMessage(`Please specify a valid username after ${prefix}votekick command`);
+            client.sendMessage(`Please specify a valid username after ${prefix}votekick`);
         }
         return;
     }
@@ -75,7 +81,7 @@ function main() {
                 client.sendMessage('Invalid username, try again.');
             }
         } else {
-            client.sendMessage(`Please specify a valid username after ${prefix}userinfo command`);
+            client.sendMessage(`Please specify a valid username after ${prefix}userinfo`);
         }
         return;
     }
@@ -115,7 +121,7 @@ function main() {
         if(msg) {
           client.sendMessage(msg);
         } else {
-          client.sendMessage("There isn't a message that you inputted to send, silly!");
+          client.sendMessage("There wasn't a message to say.");
         }
         
         return;
