@@ -5,8 +5,7 @@ let prefix = "!";
 function main() {
   const client = new Client({
       name: "CommanderBox",
-      lobbyCode: ""//,
-      // serverURL: "wss://server3.skribbl.io:5003"
+      lobbyCode: "y1CK2v6n"
   });
 
   client.on("connect", () => {
@@ -16,7 +15,18 @@ function main() {
   });
 
   client.on("text", (data) => {
-      if (data.msg.startsWith(`!ping`)) {
+    if (data.msg.startsWith(`${prefix}prefix`)) {
+        const newPrefix = data.msg.split(' ')[1]; // Assuming the new prefix is the second word after the !setprefix command
+      if (newPrefix.match(/[!@#$%^&*_\-+=:.<>/?\\]/)) {
+            prefix = newPrefix; // Update the prefix
+            client.sendMessage(`Prefix updated to: ${prefix}`);
+        } else {
+            client.sendMessage('Please specify a new prefix after !prefix command. (only accepting "/[!@#$%^&*_\-+=:.<>/?\\]/")');
+        }
+        return;
+    }
+    
+      if (data.msg.startsWith(`${prefix}ping`)) {
           client.sendMessage('Pong');
 
           return;
@@ -34,17 +44,6 @@ function main() {
             }
         } else {
             client.sendMessage('Please specify a valid username after !votekick command');
-        }
-        return;
-    }
-
-    if (data.msg.startsWith(`${prefix}prefix`)) {
-        const newPrefix = data.msg.split(' ')[1]; // Assuming the new prefix is the second word after the !setprefix command
-        if (newPrefix) {
-            prefix = newPrefix; // Update the prefix
-            client.sendMessage(`Prefix updated to: ${prefix}`);
-        } else {
-            client.sendMessage('Please specify a new prefix after !prefix command');
         }
         return;
     }
@@ -164,7 +163,7 @@ function main() {
           return;
       } else {
           if (data.msg.startsWith(`${prefix}`)) {
-              client.sendMessage('Invalid command. Please try again or use !help.');
+              client.sendMessage(`Invalid command. Please try again or use ${prefix}help.`);
           }
       }
   });
