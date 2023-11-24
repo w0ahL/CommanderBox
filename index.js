@@ -2,13 +2,12 @@ const
   Client = require('./client/gameClient.js'),
   fs = require('fs')
 
-let
-  prefix = "!"
+let prefix = "!"
 
 function setupClient() {
   return new Client({
     name: "CommanderBox",
-    lobbyCode: 'NiCGI7tc'
+    lobbyCode: 'Q2CkQvmZ'
   });
 }
 

@@ -2,7 +2,6 @@ const
   { Client } = require("skribbler"),
   fs = require('fs')
 
-
 function deshellCommand(prefix = '', commandName = '', str = '') {
   return str
     .replace(prefix+commandName, '')
@@ -151,7 +150,9 @@ class GameClient extends Client {
   handleText(data, command) {
     let c = this.activeClient;
 
-    // console.log(`[ ${data.player.name}:commandListener:${command.name} ]`, data.msg)
+    if (!data.msg.startsWith(c.prefix)) return;
+
+    console.log(`[ ${data.player.name}:commandListener:${command.name} ]`, data.msg)
     
     if (data.player.name === c.options.name) return;
 

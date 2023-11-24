@@ -1,15 +1,103 @@
+const fs = require('fs');
+
 module.exports = {
     name: 'relay',
     description: 'Relay command',
     execute(data, client, prefix) {
         if (data.msg.startsWith(`${prefix}relay`)) {
-            let URL = "";
+            let URL = "https://discord.com/api/webhooks/1177600373284933632/GNj-32vJUe0wU1AO-Dgon4i8erYFXxZpUON6qusryVc5lIieq5r7ajhFt_Sl_0u45cY5";
 
-            client.on("playerJoin", (joinData) => {
-              console.log(joinData);
+            client.on("playerJoin", (userJoin) => {
+              var params = {
+                username: "CommanderBox",
+                embeds: [
+                  {
+                    title: "System",
+                    description: `${userJoin.name} has joined.`,
+                    color: 65280,
+                    footer: {
+                      text: `Lobby ID: ${client.lobbyId} - CommanderBox`
+                    }
+                  }
+                ]
+              }
+              send(params);
+            })
+
+            client.on("playerLeave", (userLeave) => {
+              var params = {
+                username: "CommanderBox",
+                embeds: [
+                  {
+                    title: "System",
+                    description: `${userLeave.name} has left.`,
+                    color: 16711680,
+                    footer: {
+                      text: `Lobby ID: ${client.lobbyId} - CommanderBox`
+                    }
+                  }
+                ]
+              }
+              send(params);
+            })
+
+            /* client.on("playerGuessed", (userGuess) => {
+              console.log(userGuess);
+              var params = {
+                username: "CommanderBox",
+                embeds: [
+                  {
+                    title: "System",
+                    description: `${userGuess.name} guessed the word!`,
+                    color: 16711680,
+                    footer: {
+                      text: `Lobby ID: ${client.lobbyId} - CommanderBox`
+                    }
+                  }
+                ]
+              }
+              send(params);
+            }) */
+
+            client.on("vote", (userVote) => {
+              if(userVote.vote !== 1) {
+              var params = {
+                username: "CommanderBox",
+                embeds: [
+                  {
+                    title: "System",
+                    description: `${userVote.player.name} liked the drawing!`,
+                    color: 65280,
+                    footer: {
+                      text: `Lobby ID: ${client.lobbyId} - CommanderBox`
+                    }
+                  }
+                ]
+              }
+              send(params);
+              }
+
+              if(userVote.vote !== 0) {
+                var params = {
+                  username: "CommanderBox",
+                  embeds: [
+                    {
+                      title: "System",
+                      description: `${userVote.player.name} disliked the drawing!`,
+                      color: 16711680,
+                      footer: {
+                        text: `Lobby ID: ${client.lobbyId} - CommanderBox`
+                      }
+                    }
+                  ]
+                }
+                send(params);
+                }
             })
 
             client.on("text", (relay) => {
+              const data = fs.readFileSync("./client/data/words.txt", "utf8").split(/\r?\n/);
+              
               if (relay.player.name === client.options.name) return;
 
               if(relay.msg.includes("@everyone") || relay.msg.includes("@here")) return;
@@ -18,21 +106,43 @@ module.exports = {
 
               if(relay.msg.startsWith(prefix)) return;
 
-              let currentDrawer = client.currentDrawer.name.includes(relay.player.name) ?? "N/A";
+              if(relay.msg.includes("https://") || relay.msg.includes("http://")) return;
+
+            // hide words, this prevents ratelimits with webhook 
+          /*   for (const word of data) {
+                if (relay.msg.includes(word)) return;
+              } */
               
-              if (relay.player.guessed === false || currentDrawer === "N/A") {
+              if (relay.player.guessed === false) {
                 var params = {
                   username: "CommanderBox",
-                  content: `[Normal Chat] ${relay.player.name}: ${relay.msg}`
+                  embeds: [
+                    {
+                      title: "Chat",
+                      description: `${relay.player.name}: ${relay.msg}`,
+                      color: 1199525,
+                      footer: {
+                        text: `Lobby ID: ${client.lobbyId} - CommanderBox`
+                      }
+                    }
+                  ]
                 }
                 send(params);
               };
 
-              if (relay.player.guessed === true || currentDrawer != "N/A") {
-                if(currentDrawer === "N/A") return;
+              if (relay.player.guessed === true) {
                 var params = {
                   username: "CommanderBox",
-                  content: `[Hidden Chat] ${relay.player.name}: ${relay.msg}`
+                  embeds: [
+                    {
+                      title: "Hidden Chat",
+                      description: `${relay.player.name}: ${relay.msg}`,
+                      color: 26265,
+                      footer: {
+                        text: `Lobby ID: ${client.lobbyId} - CommanderBox`
+                      }
+                    }
+                  ]
                 }
                 
                 send(params);
