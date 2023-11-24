@@ -8,7 +8,7 @@ let
 function setupClient() {
   return new Client({
     name: "CommanderBox",
-    lobbyCode: '2dCwJjqk'
+    lobbyCode: 'NiCGI7tc'
   });
 }
 
