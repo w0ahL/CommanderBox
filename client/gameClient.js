@@ -97,12 +97,20 @@ class GameClient extends Client {
       "newOwner",
       "chooseWord",
       "clearCanvas",
+      "draw",
+      "packet"
     ].forEach(event => c.on(
       event,
-      (...args) => c?.[`handle${event.charAt(0).toUpperCase() + event.slice(1)}`]?.(...args)
-        || console.log(`[GameClient] Event "${event}" not found.`)
+      (...args) => {
+        let handleName = `handle${event.charAt(0).toUpperCase() + event.slice(1)}`
+        let resu = c?.[handleName]?.(...args);
+        
+        if (!c?.[handleName] && event != 'packet') {
+          console.log(`[GameEvent] Event ${event} not handled.`);
+        }
+      }
     ));
-
+    
     const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
     for (const file of commandFiles) {
