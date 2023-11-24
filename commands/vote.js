@@ -15,7 +15,7 @@ module.exports = {
         if(vote === "like") votingNum = 1;
         if(vote === "dislike") votingNum = 0;
 
-        if(vote != "like" || vote != "dislike") client.sendMessage(`You must pick "like" or "dislike" after using ${prefix}vote.`);
+        if(!vote) client.sendMessage(`You must pick "like" or "dislike" after using ${prefix}vote.`);
 
         if(votingNum === 1) liked = true;
         if(votingNum === 0) disliked = true;

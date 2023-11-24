@@ -42,12 +42,17 @@ module.exports = {
 
         setTimeout(() => {
           client.sendMessage(`${prefix}startGame - starts the game.`);
+          client.sendMessage(`${prefix}vote - votes on the drawing (must pick like or dislike after typing ${prefix}vote).`);
         }, 32000)
+
+        setTimeout(() => {
+          client.sendMessage(`${prefix}relay - starts a relay, (must provide a discord webhook in the relay command file).`);
+        }, 36000)
 
         setTimeout(() => {
           client.sendMessage(`${prefix}leave - disconnects the bot & quits the program.`);
           client.sendMessage(`The current prefix is "${prefix}".`)
-        }, 36000)
+        }, 41000)
 
         return;
       }

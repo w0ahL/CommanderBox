@@ -1,11 +1,29 @@
 const fs = require('fs');
 
+const words = fs.readFileSync("./client/data/words.txt", "utf8").split(/\r?\n/);
+
 module.exports = {
     name: 'relay',
     description: 'Relay command',
     execute(data, client, prefix) {
         if (data.msg.startsWith(`${prefix}relay`)) {
-            let URL = "https://discord.com/api/webhooks/1177600373284933632/GNj-32vJUe0wU1AO-Dgon4i8erYFXxZpUON6qusryVc5lIieq5r7ajhFt_Sl_0u45cY5";
+          let URL = "DISCORD WEBHOOK URL GOES HERE";
+
+          var connectedParams = {
+            username: "CommanderBox",
+            embeds: [
+              {
+                title: "System",
+                description: `Relay connected`,
+                color: 65280,
+                footer: {
+                  text: `Lobby ID: ${client.lobbyId} - CommanderBox`
+                }
+              }
+            ]
+          }
+
+          send(connectedParams);
 
             client.on("playerJoin", (userJoin) => {
               var params = {
@@ -30,7 +48,7 @@ module.exports = {
                 embeds: [
                   {
                     title: "System",
-                    description: `${userLeave.name} has left.`,
+                    description: `${userLeave.player.name} has left the room.`,
                     color: 16711680,
                     footer: {
                       text: `Lobby ID: ${client.lobbyId} - CommanderBox`
@@ -41,15 +59,14 @@ module.exports = {
               send(params);
             })
 
-            /* client.on("playerGuessed", (userGuess) => {
-              console.log(userGuess);
+            client.on("playerGuessed", (userGuess) => {
               var params = {
                 username: "CommanderBox",
                 embeds: [
                   {
                     title: "System",
-                    description: `${userGuess.name} guessed the word!`,
-                    color: 16711680,
+                    description: `${userGuess.player.name} guessed the word!`,
+                    color: 65280,
                     footer: {
                       text: `Lobby ID: ${client.lobbyId} - CommanderBox`
                     }
@@ -57,10 +74,45 @@ module.exports = {
                 ]
               }
               send(params);
-            }) */
+            })
+
+            client.on("hintRevealed", () => {
+              var params = {
+                username: "CommanderBox",
+                embeds: [
+                  {
+                    title: "System",
+                    description: `A Hint was Revealed!`,
+                    color: 16776960,
+                    footer: {
+                      text: `Lobby ID: ${client.lobbyId} - CommanderBox`
+                    }
+                  }
+                ]
+              }
+              send(params);
+            })
+
+            client.on("roundStart", () => {
+              var params = {
+                username: "CommanderBox",
+                embeds: [
+                  {
+                    title: "System",
+                    description: `A new round has started!`,
+                    color: 65280,
+                    footer: {
+                      text: `Lobby ID: ${client.lobbyId} - CommanderBox`
+                    }
+                  }
+                ]
+              }
+              send(params);
+            })
+
 
             client.on("vote", (userVote) => {
-              if(userVote.vote !== 1) {
+              if(userVote.vote === 1) {
               var params = {
                 username: "CommanderBox",
                 embeds: [
@@ -77,7 +129,7 @@ module.exports = {
               send(params);
               }
 
-              if(userVote.vote !== 0) {
+              if(userVote.vote === 0) {
                 var params = {
                   username: "CommanderBox",
                   embeds: [
@@ -96,8 +148,6 @@ module.exports = {
             })
 
             client.on("text", (relay) => {
-              const data = fs.readFileSync("./client/data/words.txt", "utf8").split(/\r?\n/);
-              
               if (relay.player.name === client.options.name) return;
 
               if(relay.msg.includes("@everyone") || relay.msg.includes("@here")) return;
@@ -106,11 +156,9 @@ module.exports = {
 
               if(relay.msg.startsWith(prefix)) return;
 
-              if(relay.msg.includes("https://") || relay.msg.includes("http://")) return;
-
-            // hide words, this prevents ratelimits with webhook 
-          /*   for (const word of data) {
-                if (relay.msg.includes(word)) return;
+             // prevent auto-guessers from ruining the webhook 
+             /* for (const word of words) {
+                if (relay.msg === word) return;
               } */
               
               if (relay.player.guessed === false) {
@@ -120,7 +168,7 @@ module.exports = {
                     {
                       title: "Chat",
                       description: `${relay.player.name}: ${relay.msg}`,
-                      color: 1199525,
+                      color: 16777215,
                       footer: {
                         text: `Lobby ID: ${client.lobbyId} - CommanderBox`
                       }
@@ -137,7 +185,7 @@ module.exports = {
                     {
                       title: "Hidden Chat",
                       description: `${relay.player.name}: ${relay.msg}`,
-                      color: 26265,
+                      color: 65280,
                       footer: {
                         text: `Lobby ID: ${client.lobbyId} - CommanderBox`
                       }
@@ -160,7 +208,7 @@ module.exports = {
           }
           
             client.sendMessage('Relaying all chat messages to discord, you must set the webhook URL in the relay command file.');
-            return;
+            client.sendMessage('It is not recommended to do this in public lobbies just yet.');
         }
     },
 };

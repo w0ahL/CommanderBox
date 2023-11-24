@@ -136,7 +136,9 @@ class GameClient extends Client {
 
   handleDisconnect(data) {
     let c = this.activeClient;
+    
     console.log("Disconnected", data);
+    
     setTimeout(() => {
       console.log('Rejoining in 3 seconds...');
       return c.reconnect();
@@ -150,11 +152,11 @@ class GameClient extends Client {
   handleText(data, command) {
     let c = this.activeClient;
 
+    if (data.player.name === c.options.name) return;
+    
     if (!data.msg.startsWith(c.prefix)) return;
 
-    console.log(`[ ${data.player.name}:commandListener:${command.name} ]`, data.msg)
-    
-    if (data.player.name === c.options.name) return;
+    // console.log(`[${data.player.name}:commandListener:${command.name} ]`, data.msg)
 
     command.execute(data, c, c.prefix);
     

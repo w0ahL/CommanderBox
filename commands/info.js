@@ -12,7 +12,7 @@ module.exports = {
 
         setTimeout(() => {
           client.sendMessage(`Lobby Code: ${client.lobbyId}`);
-          client.sendMessage(`Version: v1.0.2`);
+          client.sendMessage(`Version: v1.0.3`);
         }, 6000)
 
         setTimeout(() => {

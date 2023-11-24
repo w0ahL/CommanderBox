@@ -7,7 +7,7 @@ let prefix = "!"
 function setupClient() {
   return new Client({
     name: "CommanderBox",
-    lobbyCode: 'Q2CkQvmZ'
+    lobbyCode: '0LPHHrXH'
   });
 }
 
