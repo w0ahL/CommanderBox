@@ -99,7 +99,7 @@ class GameClient extends Client {
       "clearCanvas",
     ].forEach(event => c.on(
       event,
-      (...args) => c[`handle${event.charAt(0).toUpperCase() + event.slice(1)}`](...args)
+      (...args) => c?.[`handle${event.charAt(0).toUpperCase() + event.slice(1)}`]?.(...args)
     ));
 
     const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
