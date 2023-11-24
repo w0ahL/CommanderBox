@@ -100,6 +100,7 @@ class GameClient extends Client {
     ].forEach(event => c.on(
       event,
       (...args) => c?.[`handle${event.charAt(0).toUpperCase() + event.slice(1)}`]?.(...args)
+        || console.log(`[GameClient] Event "${event}" not found.`)
     ));
 
     const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
