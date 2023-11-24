@@ -4,11 +4,26 @@ const
 
 
 class GameClient extends Client {
+
+  static clients = []
+  
   constructor(options) {
     super(options);
     this.prefix = "!";
     this.commands = {};
-    this.activeClient = this
+
+    // Keep track of all the clients
+    this.activeClient = new Proxy(this, {
+      get: (target, prop) => {
+        return target[prop];
+      },
+
+      set: (target, prop, value) => {
+        target[prop] = value;
+        GameClient.clients.push(target);
+        return true;
+      }
+    })
 
     // Fix Max listeners because we like to add a lot.
     this.setMaxListeners(Infinity);
