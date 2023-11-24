@@ -3,6 +3,13 @@ const
   fs = require('fs')
 
 
+function deshellCommand(prefix = '', commandName = '', str = '') {
+  return str
+    .replace(prefix+commandName, '')
+    .trim();
+}
+
+
 class GameClient extends Client {
 
   static clients = []
@@ -45,13 +52,16 @@ class GameClient extends Client {
 
   updatePrefix(newPrefix) {
     let c = this.activeClient;
+    let caught = deshellCommand(this.prefix, 'prefix', newPrefix);
     if (
-      typeof newPrefix === "string"
-      && newPrefix.match(/^[!@#$%^&*_\-+=:.<>/?\\]+$/)
-      && newPrefix.length > 0
+      typeof caught === "string"
+      && caught.match(/[!@#$%^&*_\-+=:.<>/?\\]{1}/)
+      && caught.length > 0
     ) {
-      c.prefix = newPrefix;
-      c.sendMessage(`Prefix updated to: ${c.activeClient.prefix}`);
+      if (caught != this.prefix) {
+        c.prefix = caught;
+        c.sendMessage(`Prefix updated to: ${c.activeClient.prefix}`);
+      }
     } else {
       c.sendMessage('Error: Invalid prefix. It must be non-alphanumeric.');
     }
@@ -140,9 +150,13 @@ class GameClient extends Client {
 
   handleText(data, command) {
     let c = this.activeClient;
+
+    // console.log(`[ ${data.player.name}:commandListener:${command.name} ]`, data.msg)
+    
     if (data.player.name === c.options.name) return;
 
     command.execute(data, c, c.prefix);
+    
     if (data.msg.startsWith(`${c.prefix}prefix`)) {
       c.updatePrefix(data.msg);
     }
