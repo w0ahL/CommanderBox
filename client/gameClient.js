@@ -6,7 +6,7 @@ const
 class GameClient extends Client {
 
   static clients = []
-  
+
   constructor(options) {
     super(options);
     this.prefix = "!";
@@ -81,8 +81,26 @@ class GameClient extends Client {
 
   registerEventHandlers() {
     let c = this.activeClient;
-    c.on("connect", () => c.handleConnect());
-    c.on("disconnect", (data) => c.handleDisconnect());
+    const events = [
+      "connect",
+      "disconnect",
+      "message",
+      "playerJoin",
+      "playerLeave",
+      "playerGuessed",
+      "roundStart",
+      "undo",
+      "canDraw",
+      "vote",
+      "closeWord",
+      "hintRevealed",
+      "newOwner",
+      "chooseWord",
+      "clearCanvas",
+    ].forEach(event => c.on(
+      event,
+      (...args) => c[`handle${event.charAt(0).toUpperCase() + event.slice(1)}`](...args)
+    ));
 
     const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
