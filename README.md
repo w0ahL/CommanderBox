@@ -15,7 +15,7 @@ npm i
 3. Set up the .env file with the required environment variables, including the webhook URL and a prefix. An example .env file:
 
 ```
-WEBHOOK_URL=https://your-webhook-url
+WEBHOOK_URL=DISCORD WEBHOOK GOES HERE
 PREFIX=!
 ```
 
@@ -37,21 +37,21 @@ Feel free to customize the bot's functionality and commands to suit your specifi
 
 The CommanderBox provides a set of commands that can be utilized within the skribbl.io game chat. These commands enhance the skribbl.io experience and facilitate game management, interaction, and moderation.
 
-- `/start` - Start a new game
-- `/vote <option>` - Initiate a vote with the specified option
-- `/userInfo <username>` - Retrieve information about a specific player
-- `/spam <message> <time> <cooldown>` - Initiate a spam with a specified message, duration, and cooldown time
-- `/say <message>` - Send a message in the game chat
-- `/ping` - Check if the bot's replying back.
-- `/pick <option>` - Automatically choose a word for the game
-- `/leave` - Disconnect from the game & host.
-- `/kick <username>` - Kick a player from the game
-- `/info` - Retrieve information about the game and the bot
-- `/help` - Display a list of available commands and their usage
-- `/endGame` - End the current game
-- `/draw` - Initiate a drawing event within the game
-- `/clear` - Clear the game canvas
-- `/ban <username>` - Ban a player from the game
+- `startgame` - Start a new game (Host)
+- `vote <option>` - Initiate a vote with the specified option
+- `userInfo <username>` - Retrieve information about a specific player
+- `spam <message> <time> <cooldown>` - Initiate a spam with a specified message, duration, and cooldown time
+- `say <message>` - Send a message in the game chat
+- `ping` - Check if the bot's replying back.
+- `pick` - Automatically choose a word for the game
+- `leave` - Disconnect from the game & host.
+- `kick <username>` - Kick a player from the game (Host)
+- `info` - Retrieve information about the game and the bot
+- `help` - Display a list of available commands and their usage
+- `endGame` - End the current game (Host)
+- `draw` - Initiate a drawing event within the game
+- `clear` - Clear the game canvas
+- `ban <username>` - Ban a player from the game (Host)
 
 These commands empower players to manage and control various aspects of the skribbl.io game environment, fostering an enhanced and interactive gaming experience.
 
