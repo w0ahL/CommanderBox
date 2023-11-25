@@ -28,6 +28,8 @@ module.exports = {
             client.sendMessage(`I voted to ${dislikeMessage || likeMessage} this drawing.`);
         }
 
+        liked = false;
+        disliked = false;
         return;
       }
     },

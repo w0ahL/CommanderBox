@@ -2,25 +2,21 @@ const
   Client = require('./client/gameClient.js'),
   fs = require('fs')
 
-let prefix = "!"
+require('dotenv').config();
+
+
+let prefix = process.env.PREFIX;
 
 function setupClient() {
   return new Client({
     name: "CommanderBox",
-    lobbyCode: '0LPHHrXH'
+    lobbyCode: ''
   });
 }
-
-// ---
-
 
 function main() {
   const client = setupClient();
   client.registerEventHandlers();
 }
-
-
-// ---
-
 
 main();

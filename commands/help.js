@@ -46,7 +46,7 @@ module.exports = {
         }, 32000)
 
         setTimeout(() => {
-          client.sendMessage(`${prefix}relay - starts a relay, (must provide a discord webhook in the relay command file).`);
+          client.sendMessage(`${prefix}relay - starts a relay, (must provide a discord webhook in the env file).`);
         }, 36000)
 
         setTimeout(() => {

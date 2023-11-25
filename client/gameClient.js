@@ -130,6 +130,21 @@ class GameClient extends Client {
 
   handleConnect() {
     let c = this.activeClient;
+
+    c.lobbyType = null;
+    
+    c.on("packet", (data) => {
+          if(data.id != 10) return;
+
+          c.lobbyType = data.data.type;
+
+          if (c.lobbyType === 0) {
+             console.log("This doesn't support public lobbies just yet.\nCheck back soon for public lobby support.");
+
+            return process.exit(0);
+          }
+    })
+    
     console.log(`Connected to ${c.lobbyId}\nCurrent Player Count: ${c.players.length}`);
     c.sendMessage(`Use ${c.prefix}help to see the list of my commands.`);
   }
