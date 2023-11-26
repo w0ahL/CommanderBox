@@ -43,14 +43,15 @@ The CommanderBox provides a set of commands that can be utilized within the skri
 - `spam <message> <time> <cooldown>` - Initiate a spam with a specified message, duration, and cooldown time
 - `say <message>` - Send a message in the game chat
 - `ping` - Check if the bot's replying back.
-- `pick` - Automatically choose a word for the game
+- `pick` - Automatically choose a word for the game (Drawer)
+- `relay` - shows skribbl.io chat inside of discord (Must provide a webhook url in .env file)
 - `leave` - Disconnect from the game & host.
 - `kick <username>` - Kick a player from the game (Host)
 - `info` - Retrieve information about the game and the bot
 - `help` - Display a list of available commands and their usage
 - `endGame` - End the current game (Host)
-- `draw` - Initiate a drawing event within the game
-- `clear` - Clear the game canvas
+- `draw` - Initiate a drawing event within the game to advertise the discord server (Drawer)
+- `clear` - Clear the game canvas (Drawer)
 - `ban <username>` - Ban a player from the game (Host)
 
 These commands empower players to manage and control various aspects of the skribbl.io game environment, fostering an enhanced and interactive gaming experience.
