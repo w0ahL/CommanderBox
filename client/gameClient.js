@@ -101,6 +101,7 @@ class GameClient extends Client {
       "undo",
       "canDraw",
       "vote",
+      "voteKick",
       "closeWord",
       "hintRevealed",
       "newOwner",
@@ -131,37 +132,18 @@ class GameClient extends Client {
   handleConnect() {
     let c = this.activeClient;
 
-    c.lobbyType = null;
-    
-    c.on("packet", (data) => {
-          if(data.id != 10) return;
+    if (c.lobbyType === 0) {
+      console.log("This doesn't support public lobbies just yet.\nCheck back soon for public lobby support.");
 
-          c.lobbyType = data.data.type;
-
-          if (c.lobbyType === 0) {
-             console.log("This doesn't support public lobbies just yet.\nCheck back soon for public lobby support.");
-
-            return process.exit(0);
-          }
-    })
+      return process.exit(0);
+    }
     
     console.log(`Connected to ${c.lobbyId}\nCurrent Player Count: ${c.players.length}`);
     c.sendMessage(`Use ${c.prefix}help to see the list of my commands.`);
   }
 
   handleDisconnect(data) {
-    let c = this.activeClient;
-    
     console.log("Disconnected", data);
-    
-    setTimeout(() => {
-      console.log('Rejoining in 3 seconds...');
-      return c.reconnect();
-    }, 3000);
-  }
-
-  reconnect() {
-    return this.activeClient = new GameClient(this.activeClient.options);
   }
 
   handleText(data, command) {
@@ -170,8 +152,6 @@ class GameClient extends Client {
     if (data.player.name === c.options.name) return;
     
     if (!data.msg.startsWith(c.prefix)) return;
-
-    // console.log(`[${data.player.name}:commandListener:${command.name} ]`, data.msg)
 
     command.execute(data, c, c.prefix);
     

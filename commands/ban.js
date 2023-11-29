@@ -5,7 +5,7 @@ module.exports = {
       if (data.msg.startsWith(`${prefix}ban`)) {
           const username = data.msg.split(' ')[1];
           if (username) {
-              const player = client.players.find(player => player.name === username);
+            const player = client.players.find(player => player.name.toLowerCase() === username.toLowerCase());
               if (player) {
                   client.hostBan(player.id);
                   client.sendMessage(`I banned ${player.name}, If I have host permissons of course.`);

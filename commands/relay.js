@@ -25,6 +25,10 @@ module.exports = {
 
             send(connectedParams);
 
+            client.on("voteKick", (data) => {
+                console.log(data)
+            })
+
             client.on("playerJoin", (userJoin) => {
                 var params = {
                     username: "CommanderBox",
@@ -103,138 +107,142 @@ module.exports = {
             })
 
             // packet logging for id 11
-            client.on("packet", (packetData) => {
-                if (packetData.id != 11) return;
-              
-                if (client.state === 0) {
-                    var params = {
-                        username: "CommanderBox",
-                        embeds: [{
-                            title: "System",
-                            description: `Waiting For Players`,
-                            color: 16754756,
-                            footer: {
-                                text: `Lobby ID: ${client.lobbyId} - CommanderBox`
-                            }
-                        }]
-                    }
-                    send(params);
+          client.on("packet", (packetData) => {
+              if (packetData.id != 11) return;
 
-                    // fix bug where text stays green even when nobody is drawing anymore
-                    client.currentDrawer = null;
-                }
+              if (client.state === 0) {
+                  var params = {
+                      username: "CommanderBox",
+                      embeds: [{
+                          title: "System",
+                          description: `Waiting For Players`,
+                          color: 16754756,
+                          footer: {
+                              text: `Lobby ID: ${client.lobbyId} - Online Players: ${client.players.length} - CommanderBox`
+                          }
+                      }]
+                  }
+                  send(params);
 
-                if (client.state === 1) {
-                    var params = {
-                        username: "CommanderBox",
-                        embeds: [{
-                            title: "System",
-                            description: `Game starting in a few seconds`,
-                            color: 16754756,
-                            footer: {
-                                text: `Lobby ID: ${client.lobbyId} - CommanderBox`
-                            }
-                        }]
-                    }
-                    send(params);
-                }
+                  // fix bug where text stays green even when nobody is drawing anymore
+                  client.currentDrawer = null;
+              }
 
-                if (client.state === 3) {
-                    var params = {
-                        username: "CommanderBox",
-                        embeds: [{
-                            title: "System",
-                            description: `**${client.currentDrawer?.name || "N/A"}** is choosing a word!`,
-                            color: 16754756,
-                            footer: {
-                                text: `Lobby ID: ${client.lobbyId} - CommanderBox`
-                            }
-                        }]
-                    }
-                    send(params);
-                }
+              if (client.state === 1) {
+                  var params = {
+                      username: "CommanderBox",
+                      embeds: [{
+                          title: "System",
+                          description: `Game starting in a few seconds`,
+                          color: 16754756,
+                          footer: {
+                              text: `Lobby ID: ${client.lobbyId} - CommanderBox`
+                          }
+                      }]
+                  }
+                  send(params);
+              }
 
-                if (client.state === 4) {
-                    var params = {
-                        username: "CommanderBox",
-                        embeds: [{
-                            title: "System",
-                            description: `**${client.currentDrawer?.name || "N/A"}** is drawing now!`,
-                            color: 3765710,
-                            footer: {
-                                text: `Lobby ID: ${client.lobbyId} - CommanderBox`
-                            }
-                        }]
-                    }
-                    send(params);
-                }
+              if (client.state === 3) {
+                  if(client.options.name === client.currentDrawer?.name) return;
 
-                if (client.state === 5) {
-                    client.currentDrawer = null;
-                }
+                  var params = {
+                      username: "CommanderBox",
+                      embeds: [{
+                          title: "System",
+                          description: `**${client.currentDrawer?.name || "N/A"}** is choosing a word!`,
+                          color: 16754756,
+                          footer: {
+                              text: `Lobby ID: ${client.lobbyId} - CommanderBox`
+                          }
+                      }]
+                  }
+                  send(params);
+              }
 
-                if (client.state === 7) {
-                    var params = {
-                        username: "CommanderBox",
-                        embeds: [{
-                            title: "System",
-                            description: `Waiting for the game to start`,
-                            color: 16754756,
-                            footer: {
-                                text: `Lobby ID: ${client.lobbyId} - CommanderBox`
-                            }
-                        }]
-                    }
-                    send(params);
+              if (client.state === 4) {
+                  var params = {
+                      username: "CommanderBox",
+                      embeds: [{
+                          title: "System",
+                          description: `**${client.currentDrawer?.name || "N/A"}** is drawing now!`,
+                          color: 3765710,
+                          footer: {
+                              text: `Lobby ID: ${client.lobbyId} - CommanderBox`
+                          }
+                      }]
+                  }
+                  send(params);
+              }
 
-                    client.currentDrawer = null;
-                }
+              if (client.state === 5) {
+                  client.currentDrawer = null;
+              }
 
-                if (packetData.data.data.reason === 1) {
-                    var params = {
-                        username: "CommanderBox",
-                        embeds: [{
-                            title: "System",
-                            description: `Time is up!\nThe word was '**${packetData.data.data.word}**'`,
-                            color: 65280,
-                            footer: {
-                                text: `Lobby ID: ${client.lobbyId} - CommanderBox`
-                            }
-                        }]
-                    }
-                    send(params);
-                }
+              if (client.state === 7) {
+                  var params = {
+                      username: "CommanderBox",
+                      embeds: [{
+                          title: "System",
+                          description: `Waiting for the game to start`,
+                          color: 16754756,
+                          footer: {
+                              text: `Lobby ID: ${client.lobbyId} - CommanderBox`
+                          }
+                      }]
+                  }
+                  send(params);
 
-                if (packetData.data.data.reason === 0) {
-                    var params = {
-                        username: "CommanderBox",
-                        embeds: [{
-                            title: "System",
-                            description: `The word was '**${packetData.data.data.word}**'\nEveryone guessed the word!`,
-                            color: 65280,
-                            footer: {
-                                text: `Lobby ID: ${client.lobbyId} - CommanderBox`
-                            }
-                        }]
-                    }
-                    send(params);
-                }
+                  client.currentDrawer = null;
+              }
 
-                if (packetData.data.id === 6) {
-                    var params = {
-                        username: "CommanderBox",
-                        embeds: [{
-                            title: "System",
-                            description: `Round **${client.round}** has ended`,
-                            color: 16711680,
-                            footer: {
-                                text: `Lobby ID: ${client.lobbyId} - CommanderBox`
-                            }
-                        }]
-                    }
-                    send(params);
-                }
-            })
+              if (packetData.data.data.reason === 1) {
+                  var params = {
+                      username: "CommanderBox",
+                      embeds: [{
+                          title: "System",
+                          description: `Time is up!\nThe word was '**${packetData.data.data.word}**'`,
+                          color: 65280,
+                          footer: {
+                              text: `Lobby ID: ${client.lobbyId} - CommanderBox`
+                          }
+                      }]
+                  }
+                  send(params);
+              }
+
+              if (packetData.data.data.reason === 0) {
+                  var params = {
+                      username: "CommanderBox",
+                      embeds: [{
+                          title: "System",
+                          description: `The word was '**${packetData.data.data.word}**'\nEveryone guessed the word!`,
+                          color: 65280,
+                          footer: {
+                              text: `Lobby ID: ${client.lobbyId} - CommanderBox`
+                          }
+                      }]
+                  }
+                  send(params);
+              }
+
+              if (packetData.data.id === 6) {
+                  if(client.round === 0) return;
+
+                  var params = {
+                      username: "CommanderBox",
+                      embeds: [{
+                          title: "System",
+                          description: `Round **${client.round}** has ended`,
+                          color: 16711680,
+                          footer: {
+                              text: `Lobby ID: ${client.lobbyId} - CommanderBox`
+                          }
+                      }]
+                  }
+                  send(params);
+              }
+          })
 
             client.on("startError", (gameStartErr) => {
                 if (gameStartErr === 0) {
@@ -288,7 +296,7 @@ module.exports = {
                     username: "CommanderBox",
                     embeds: [{
                         title: "System",
-                        description: `A Hint was Revealed!`,
+                        description: `A hint was revealed!`,
                         color: 16754756,
                         footer: {
                             text: `Lobby ID: ${client.lobbyId} - CommanderBox`

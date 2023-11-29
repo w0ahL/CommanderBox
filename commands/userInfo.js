@@ -5,7 +5,7 @@ module.exports = {
       if (data.msg.startsWith(`${prefix}userinfo`)) {
           const username = data.msg.split(' ')[1]; // Assuming that the username is the second word after the !userinfo command
           if (username) {
-              const player = client.players.find(player => player.name === username);
+              const player = client.players.find(player => player.name.toLowerCase() === username.toLowerCase());
               if (player) {
                   client.sendMessage(`Getting the latest on ${player.name}...`);
 

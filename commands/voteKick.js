@@ -2,10 +2,10 @@ module.exports = {
     name: 'votekick',
     description: 'voteKick command',
     execute(data, client, prefix) {
-      if (data.msg.startsWith(`${prefix}votekick`)) {
+      if (data.msg.toLowerCase().startsWith(`${prefix}votekick `)) {
           const username = data.msg.split(' ')[1]; // Assuming that the username is the second word after the !votekick command
           if (username) {
-              const player = client.players.find(player => player.name === username);
+            const player = client.players.find(player => player.name.toLowerCase() === username.toLowerCase());
               if (player) {
                   client.votekick(player.id);
                   client.sendMessage(`I voted to kick ${player.name}.`)

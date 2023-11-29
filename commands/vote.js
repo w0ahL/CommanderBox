@@ -2,7 +2,7 @@ module.exports = {
     name: 'vote',
     description: 'vote command',
     execute(data, client, prefix) {
-      if (data.msg.startsWith(`${prefix}vote`)) {
+      if (data.msg.startsWith(`${prefix}vote `)) {
         const vote = data.msg.split(' ')[1];
         let votingNum;
 
