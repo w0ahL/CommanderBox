@@ -1,5 +1,6 @@
 const
   Client = require('./client/gameClient.js'),
+  fs = require('fs')
 
 require('dotenv').config();
 
