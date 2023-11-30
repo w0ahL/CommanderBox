@@ -47,6 +47,7 @@ module.exports = {
 
         setTimeout(() => {
           client.sendMessage(`${prefix}relay - starts a relay, (must provide a discord webhook in the env file).`);
+          client.sendMessage(`${prefix}guess - automtically guess the word for the current round.`);
         }, 36000)
 
         setTimeout(() => {

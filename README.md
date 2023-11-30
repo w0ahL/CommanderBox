@@ -43,6 +43,7 @@ The CommanderBox provides a set of commands that can be utilized within the skri
 - `spam <message> <time> <cooldown>` - Initiate a spam with a specified message, duration, and cooldown time
 - `say <message>` - Send a message in the game chat
 - `ping` - Check if the bot's replying back.
+- `guess` - Automatically guesses the current word for the round.
 - `pick` - Automatically choose a word for the game (Drawer)
 - `relay` - shows skribbl.io chat inside of discord (Must provide a webhook url in .env file)
 - `leave` - Disconnect from the game & host.

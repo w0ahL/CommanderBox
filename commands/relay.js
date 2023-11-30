@@ -25,10 +25,6 @@ module.exports = {
 
             send(connectedParams);
 
-            client.on("voteKick", (data) => {
-                console.log(data)
-            })
-
             client.on("playerJoin", (userJoin) => {
                 var params = {
                     username: "CommanderBox",
@@ -89,6 +85,21 @@ module.exports = {
                     }
                     send(params);
                 }
+            })
+
+            client.on("voteKick", (data) => {
+                var disconnectedParams = {
+                    username: "CommanderBox",
+                    embeds: [{
+                        title: "System",
+                        description: `${data.voter.name} is voting to kick ${data.votee.name} (${data.currentVotes}/${data.requiredVotes})`,
+                        color: 14863104,
+                        footer: {
+                          text: `Lobby ID: ${client.lobbyId} - CommanderBox`
+                      }
+                    }]
+                }
+                send(disconnectedParams);
             })
 
             client.on("newOwner", (userHost) => {
