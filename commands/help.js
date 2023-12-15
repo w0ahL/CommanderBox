@@ -51,9 +51,13 @@ module.exports = {
         }, 36000)
 
         setTimeout(() => {
+          client.sendMessage(`${prefix}record - saves the current drawing into a JSON file onto the drawing directory.`);
+        }, 41000)
+
+        setTimeout(() => {
           client.sendMessage(`${prefix}leave - disconnects the bot & quits the program.`);
           client.sendMessage(`The current prefix is "${prefix}".`)
-        }, 41000)
+        }, 46000)
 
         return;
       }

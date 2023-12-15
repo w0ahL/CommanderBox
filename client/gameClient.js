@@ -91,21 +91,18 @@ class GameClient extends Client {
   registerEventHandlers() {
     let c = this.activeClient;
     const events = [
-      "connect",
+      "connect2",
       "disconnect",
       "message",
       "playerJoin",
       "playerLeave",
       "playerGuessed",
-      "roundStart",
       "undo",
-      "canDraw",
       "vote",
       "voteKick",
       "closeWord",
       "hintRevealed",
       "newOwner",
-      "chooseWord",
       "clearCanvas",
       "draw",
       "packet"
@@ -132,7 +129,7 @@ class GameClient extends Client {
   handleConnect() {
     let c = this.activeClient;
 
-    if (c.lobbyType === 0) {
+   if (c.lobbyType === 0) {
       console.log("This doesn't support public lobbies just yet.\nCheck back soon for public lobby support.");
 
       return process.exit(0);

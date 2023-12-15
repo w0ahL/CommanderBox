@@ -1,446 +1,411 @@
-const fs = require('fs');
+const fs = require("fs");
 
-require('dotenv').config();
+require("dotenv").config();
 
 const words = fs.readFileSync("./client/data/words.txt", "utf8").split(/\r?\n/);
 
 module.exports = {
-    name: 'relay',
-    description: 'Relay command',
-    execute(data, client, prefix) {
-        if (data.msg.startsWith(`${prefix}relay`)) {
-            let URL = process.env.WEBHOOK_URL;
+  name: "relay",
+  description: "Relay command",
+  execute(data, client, prefix) {
+    if (data.msg.startsWith(`${prefix}relay`)) {
+      let URL = process.env.WEBHOOK_URL;
 
-            var connectedParams = {
-                username: "CommanderBox",
-                embeds: [{
-                    title: "System",
-                    description: `Relay connected`,
-                    color: 65280,
-                    footer: {
-                        text: `Lobby ID: ${client.lobbyId} - CommanderBox`
-                    }
-                }]
-            }
+      if (!URL) {
+        console.error("You must include a URL in the .env file.");
+      }
 
-            send(connectedParams);
+      send({
+        username: "CommanderBox",
+        embeds: [
+          {
+            title: "System",
+            description: `Relay connected
 
-            client.on("playerJoin", (userJoin) => {
-                var params = {
-                    username: "CommanderBox",
-                    embeds: [{
-                        title: "System",
-                        description: `**${userJoin.name}** joined the room!`,
-                        color: 65280,
-                        footer: {
-                            text: `Lobby ID: ${client.lobbyId} - CommanderBox`
-                        }
-                    }]
-                }
-                send(params);
-            })
+              __**Server Information**__
+                      ➸ Lobby ID: ${client.lobbyId}
+                      ➸ Online Players: ${client.players.length}
+                      ➸ Current Round: ${client.round}
+              ➸ Lobby Type: ${client.lobbyType === 0 ? "Public" : "Private"}
+              ➸ Current Drawer: ${client.currentDrawer?.name ?? "N/A"}
 
-            client.on("playerLeave", (userLeave) => {
-                if (userLeave.reason === 0) {
-                    var params = {
-                        username: "CommanderBox",
-                        embeds: [{
-                            title: "System",
-                            description: `**${userLeave.player.name}** left the room!`,
-                            color: 16711680,
-                            footer: {
-                                text: `Lobby ID: ${client.lobbyId} - CommanderBox`
-                            }
-                        }]
-                    }
-                    send(params);
-                }
+              __**Server Settings**__
+              ➸ Language: ${client.settings.language}
+              ➸ Max Players: ${client.settings.maxPlayers}
+              ➸ Max Draw Time: ${client.settings.maxDrawTime}
+              ➸ Max Rounds: ${client.settings.maxRounds}
+              ➸ Max Hints: ${client.settings.maxHints}
+              ➸ Custom Words: ${client.settings.useCustomWords}
+              `,
+            color: 5688871,
+            footer: {
+              text: `Lobby ID: ${client.lobbyId} - CommanderBox`,
+            },
+          },
+        ],
+      });
 
-                if (userLeave.reason === 1) {
-                    var params = {
-                        username: "CommanderBox",
-                        embeds: [{
-                            title: "System",
-                            description: `**${userLeave.player.name}** has been kicked.`,
-                            color: 16711680,
-                            footer: {
-                                text: `Lobby ID: ${client.lobbyId} - CommanderBox`
-                            }
-                        }]
-                    }
-                    send(params);
-                }
+      client.on("playerJoin", (userJoin) => {
+        send({
+          username: "CommanderBox",
+          embeds: [
+            {
+              title: "System",
+              description: `**${userJoin.name}** joined the room!
 
-                if (userLeave.reason === 2) {
-                    var params = {
-                        username: "CommanderBox",
-                        embeds: [{
-                            title: "System",
-                            description: `**${userLeave.player.name}** has been banned.`,
-                            color: 16711680,
-                            footer: {
-                                text: `Lobby ID: ${client.lobbyId} - CommanderBox`
-                            }
-                        }]
-                    }
-                    send(params);
-                }
-            })
+                        __**User Information**__
+                        ➸ User ID: ${userJoin.id}
+                        ➸ Total Score: ${userJoin.score}
+                        ➸ Flag(s): ${userJoin.flags}
+                        `,
+              color: 5688871,
+              footer: {
+                text: `Lobby ID: ${client.lobbyId} - Online Players: ${client.players.length} - CommanderBox`,
+              },
+            },
+          ],
+        });
+      });
 
-            client.on("voteKick", (data) => {
-                var disconnectedParams = {
-                    username: "CommanderBox",
-                    embeds: [{
-                        title: "System",
-                        description: `${data.voter.name} is voting to kick ${data.votee.name} (${data.currentVotes}/${data.requiredVotes})`,
-                        color: 14863104,
-                        footer: {
-                          text: `Lobby ID: ${client.lobbyId} - CommanderBox`
-                      }
-                    }]
-                }
-                send(disconnectedParams);
-            })
+      client.on("playerLeave", ({ player, reason }) => {
+        const message = {
+          username: "CommanderBox",
+          embeds: [
+            {
+              title: "System",
+              description: "",
+              color: 13520650,
+              footer: {
+                text: `Lobby ID: ${client.lobbyId} - Online Players: ${client.players.length} - CommanderBox`,
+              },
+            },
+          ],
+        };
 
-            client.on("newOwner", (userHost) => {
-                var params = {
-                    username: "CommanderBox",
-                    embeds: [{
-                        title: "System",
-                        description: `**${userHost.player.name}** is now the new host.`,
-                        color: 16754756,
-                        footer: {
-                            text: `Lobby ID: ${client.lobbyId} - CommanderBox`
-                        }
-                    }]
-                }
-                send(params);
-            })
+        if (client.players.length < 3) client.disconnect();
 
-            // packet logging for id 11
-          client.on("packet", (packetData) => {
-              if (packetData.id != 11) return;
+        switch (reason) {
+          case 0:
+            message.embeds[0].description = `**${player.name}** left the room!
 
-              if (client.state === 0) {
-                  var params = {
-                      username: "CommanderBox",
-                      embeds: [{
-                          title: "System",
-                          description: `Waiting For Players`,
-                          color: 16754756,
-                          footer: {
-                              text: `Lobby ID: ${client.lobbyId} - Online Players: ${client.players.length} - CommanderBox`
-                          }
-                      }]
-                  }
-                  send(params);
+                        __**User Information**__
+                        ➸ User ID: ${player.id}
+                        ➸ Total Score: ${player.score}
+                        ➸ Flag(s): ${player.flags}
+                        `;
+            break;
 
-                  // fix bug where text stays green even when nobody is drawing anymore
-                  client.currentDrawer = null;
-              }
+          case 1:
+            message.embeds[0].description = `**${player.name}** has been kicked.
 
-              if (client.state === 1) {
-                  var params = {
-                      username: "CommanderBox",
-                      embeds: [{
-                          title: "System",
-                          description: `Game starting in a few seconds`,
-                          color: 16754756,
-                          footer: {
-                              text: `Lobby ID: ${client.lobbyId} - CommanderBox`
-                          }
-                      }]
-                  }
-                  send(params);
-              }
+                        __**User Information**__
+                        ➸ User ID: ${player.id}
+                        ➸ Total Score: ${player.score}
+                        ➸ Flag(s): ${player.flags}
+                        `;
+            break;
 
-              if (client.state === 3) {
-                  if(client.options.name === client.currentDrawer?.name) return;
+          case 2:
+            message.embeds[0].description = `**${player.name}** has been banned.
 
-                  var params = {
-                      username: "CommanderBox",
-                      embeds: [{
-                          title: "System",
-                          description: `**${client.currentDrawer?.name || "N/A"}** is choosing a word!`,
-                          color: 16754756,
-                          footer: {
-                              text: `Lobby ID: ${client.lobbyId} - CommanderBox`
-                          }
-                      }]
-                  }
-                  send(params);
-              }
-
-              if (client.state === 4) {
-                  var params = {
-                      username: "CommanderBox",
-                      embeds: [{
-                          title: "System",
-                          description: `**${client.currentDrawer?.name || "N/A"}** is drawing now!`,
-                          color: 3765710,
-                          footer: {
-                              text: `Lobby ID: ${client.lobbyId} - CommanderBox`
-                          }
-                      }]
-                  }
-                  send(params);
-              }
-
-              if (client.state === 5) {
-                  client.currentDrawer = null;
-              }
-
-              if (client.state === 7) {
-                  var params = {
-                      username: "CommanderBox",
-                      embeds: [{
-                          title: "System",
-                          description: `Waiting for the game to start`,
-                          color: 16754756,
-                          footer: {
-                              text: `Lobby ID: ${client.lobbyId} - CommanderBox`
-                          }
-                      }]
-                  }
-                  send(params);
-
-                  client.currentDrawer = null;
-              }
-
-              if (packetData.data.data.reason === 1) {
-                  var params = {
-                      username: "CommanderBox",
-                      embeds: [{
-                          title: "System",
-                          description: `Time is up!\nThe word was '**${packetData.data.data.word}**'`,
-                          color: 65280,
-                          footer: {
-                              text: `Lobby ID: ${client.lobbyId} - CommanderBox`
-                          }
-                      }]
-                  }
-                  send(params);
-              }
-
-              if (packetData.data.data.reason === 0) {
-                  var params = {
-                      username: "CommanderBox",
-                      embeds: [{
-                          title: "System",
-                          description: `The word was '**${packetData.data.data.word}**'\nEveryone guessed the word!`,
-                          color: 65280,
-                          footer: {
-                              text: `Lobby ID: ${client.lobbyId} - CommanderBox`
-                          }
-                      }]
-                  }
-                  send(params);
-              }
-
-              if (packetData.data.id === 6) {
-                  if(client.round === 0) return;
-
-                  var params = {
-                      username: "CommanderBox",
-                      embeds: [{
-                          title: "System",
-                          description: `Round **${client.round}** has ended`,
-                          color: 16711680,
-                          footer: {
-                              text: `Lobby ID: ${client.lobbyId} - CommanderBox`
-                          }
-                      }]
-                  }
-                  send(params);
-              }
-          })
-
-            client.on("startError", (gameStartErr) => {
-                if (gameStartErr === 0) {
-                    var params = {
-                        username: "CommanderBox",
-                        embeds: [{
-                            title: "System",
-                            description: `The host needs atleast **2** players to start the game`,
-                            color: 16711680,
-                            footer: {
-                                text: `Lobby ID: ${client.lobbyId} - CommanderBox`
-                            }
-                        }]
-                    }
-                    send(params);
-                }
-
-                if (gameStartErr === 100) {
-                    var params = {
-                        username: "CommanderBox",
-                        embeds: [{
-                            title: "System",
-                            description: `The server will be restarting soon`,
-                            color: 16711680,
-                            footer: {
-                                text: `Lobby ID: ${client.lobbyId} - CommanderBox`
-                            }
-                        }]
-                    }
-                    send(params);
-                }
-            })
-
-            client.on("playerGuessed", (userGuess) => {
-                var params = {
-                    username: "CommanderBox",
-                    embeds: [{
-                        title: "System",
-                        description: `**${userGuess.player.name}** guessed the word!`,
-                        color: 65280,
-                        footer: {
-                            text: `Lobby ID: ${client.lobbyId} - CommanderBox`
-                        }
-                    }]
-                }
-                send(params);
-            })
-
-            client.on("hintRevealed", () => {
-                var params = {
-                    username: "CommanderBox",
-                    embeds: [{
-                        title: "System",
-                        description: `A hint was revealed!`,
-                        color: 16754756,
-                        footer: {
-                            text: `Lobby ID: ${client.lobbyId} - CommanderBox`
-                        }
-                    }]
-                }
-                send(params);
-            })
-
-            client.on("roundStart", () => {
-                var params = {
-                    username: "CommanderBox",
-                    embeds: [{
-                        title: "System",
-                        description: `Round **${client.round}** has started`,
-                        color: 65280,
-                        footer: {
-                            text: `Lobby ID: ${client.lobbyId} - CommanderBox`
-                        }
-                    }]
-                }
-                send(params);
-            })
-
-
-            client.on("vote", (userVote) => {
-                if (userVote.vote === 1) {
-                    var params = {
-                        username: "CommanderBox",
-                        embeds: [{
-                            title: "System",
-                            description: `**${userVote.player.name}** liked the drawing!`,
-                            color: 65280,
-                            footer: {
-                                text: `Lobby ID: ${client.lobbyId} - CommanderBox`
-                            }
-                        }]
-                    }
-                    send(params);
-                }
-
-                if (userVote.vote === 0) {
-                    var params = {
-                        username: "CommanderBox",
-                        embeds: [{
-                            title: "System",
-                            description: `**${userVote.player.name}** disliked the drawing!`,
-                            color: 16711680,
-                            footer: {
-                                text: `Lobby ID: ${client.lobbyId} - CommanderBox`
-                            }
-                        }]
-                    }
-                    send(params);
-                }
-            })
-
-            client.on("text", (relay) => {
-                if (relay.player.name === client.options.name) return;
-
-                if (relay.msg.includes("@everyone") || relay.msg.includes("@here")) return;
-
-                if (relay.msg.includes('@') || relay.msg.includes("<") || relay.msg.includes(">")) return;
-
-                if (relay.msg.startsWith(prefix)) return;
-
-                // prevent auto-guessers from ruining the webhook 
-                /* for (const word of words) {
-                   if (relay.msg === word) return;
-                 } */
-
-              if (relay.player.guessed === false) {
-                if (relay.player.name === client.currentDrawer?.name) {
-                  var params = {
-                      username: "CommanderBox",
-                      embeds: [{
-                          title: "Chat",
-                          description: `**${relay.player.name}**: ${relay.msg}`,
-                          color: 8236351, // Color for drawer
-                          footer: {
-                              text: `Lobby ID: ${client.lobbyId} - CommanderBox`
-                          }
-                      }]
-                  }
-                  send(params);
-                } else {
-                  var params = {
-                      username: "CommanderBox",
-                      embeds: [{
-                          title: "Chat",
-                          description: `**${relay.player.name}**: ${relay.msg}`,
-                          color: 16777215, // Default color
-                          footer: {
-                              text: `Lobby ID: ${client.lobbyId} - CommanderBox`
-                          }
-                      }]
-                  }
-                  send(params);
-                }
-              };
-
-                if (relay.player.guessed === true) {
-                    var params = {
-                        username: "CommanderBox",
-                        embeds: [{
-                            title: "Chat",
-                            description: `**${relay.player.name}**: ${relay.msg}`,
-                            color: 8236351,
-                            footer: {
-                                text: `Lobby ID: ${client.lobbyId} - CommanderBox`
-                            }
-                        }]
-                    }
-
-                    send(params);
-                };
-            });
-
-            function send(params) {
-                fetch(URL, {
-                    method: "POST",
-                    headers: {
-                        'Content-type': 'application/json'
-                    },
-                    body: JSON.stringify(params)
-                })
-            }
-
-            client.sendMessage('Relaying all chat messages to discord, you must set the webhook URL in the env file.');
-
-            setTimeout(() => {
-                client.sendMessage("It isn't recommended to do this in public lobbies just yet.");
-            }, 1000)
+                        __**User Information**__
+                        ➸ User ID: ${player.id}
+                        ➸ Total Score: ${player.score}
+                        ➸ Flag(s): ${player.flags}
+                        `;
+            break;
         }
-    },
+
+        send(message);
+      });
+
+      client.on("votekick", ({ voter, votee, currentVotes, requiredVotes }) => {
+        if (currentVotes > requiredVotes) currentVotes = requriedVotes;
+
+        send({
+          username: "CommanderBox",
+          embeds: [
+            {
+              title: "System",
+              description: `**${voter.name}** is voting to kick **${votee.name}** (${currentVotes}/${requiredVotes})`,
+              color: 14863104,
+              footer: {
+                text: `Lobby ID: ${client.lobbyId} - CommanderBox`,
+              },
+            },
+          ],
+        });
+      });
+
+      client.on("newOwner", ({ player }) => {
+        send({
+          username: "CommanderBox",
+          embeds: [
+            {
+              title: "System",
+              description: `**${player.name}** is now the new host.`,
+              color: 16754756,
+              footer: {
+                text: `Lobby ID: ${client.lobbyId} - CommanderBox`,
+              },
+              thumbnail: {
+                url: "https://skribbl.io/img/crown.gif",
+              },
+            },
+          ],
+        });
+      });
+
+      client.on("stateUpdate", (data) => {
+        const message = {
+          username: "CommanderBox",
+          embeds: [
+            {
+              title: "System",
+              description: "",
+              color: 16754756,
+              footer: {
+                text: `Lobby ID: ${client.lobbyId} - CommanderBox`,
+              },
+              thumbnail: {
+                url: "",
+              },
+            },
+          ],
+        };
+
+        switch (data.state) {
+          case 0:
+            message.embeds[0].description = "Waiting for players";
+            client.currentDrawer = null;
+            break;
+
+          case 1:
+            message.embeds[0].description = "Game starting in a few seconds";
+            break;
+
+          case 2:
+            message.embeds[0].description = `Round **${client.round}** has started`;
+            message.embeds[0].color = 65280;
+            break;
+
+          case 3:
+            message.embeds[0].description = `**${
+              client.currentDrawer?.name ?? "N/A"
+            }** is choosing a word!`;
+            message.embeds[0].thumbnail.url =
+              "https://skribbl.io/img/randomize.gif";
+            break;
+
+          case 4:
+            message.embeds[0].description = `**${
+              client.currentDrawer?.name ?? "N/A"
+            }** is drawing now!`;
+            message.embeds[0].thumbnail.url =
+              "https://i.ibb.co/k4vb1PM/pen-2.gif";
+            message.embeds[0].color = 3765710;
+            break;
+
+          case 5:
+            let drawResultsMsg = "";
+
+            switch (data.reason) {
+              case 0:
+                message.embeds[0].description = `Everyone guessed the word!\n➸ '**${data.word}**'`;
+                message.embeds[0].color = 5688871;
+                send(message);
+                break;
+
+              case 1:
+                message.embeds[0].description = `Time's up!\n➸ '**${data.word}**'`;
+                message.embeds[0].thumbnail.url =
+                  "https://skribbl.io/img/setting_2.gif";
+                message.embeds[0].color = 5688871;
+                send(message);
+                break;
+
+              case 2:
+                message.embeds[0].description = `The drawer left the game!\n➸ '**${data.word}**'`;
+                message.embeds[0].color = 5688871;
+                send(message);
+                break;
+            }
+
+            for (const player in data.newScores) {
+              if (data.newScores[player] > 0) {
+                drawResultsMsg += `**${player}**: ${data.newScores[player]}\n`;
+              }
+            }
+
+            if (!drawResultsMsg) break;
+
+            message.embeds[0].thumbnail.url =
+              "https://skribbl.io/img/crown.gif";
+            message.embeds[0].description = `The drawing results are in!\n\n${drawResultsMsg}`;
+            message.embeds[0].color = 16754756;
+
+            client.currentDrawer = null;
+            break;
+
+          case 6:
+            let leaderboardMsg = "";
+
+            for (const index in data.leaderboard) {
+              const player = data.leaderboard[index];
+
+              leaderboardMsg += `**${player.name}**: ${player.score}\n`;
+            }
+
+            if (!leaderboardMsg) break;
+
+            message.embeds[0].thumbnail.url =
+              "https://skribbl.io/img/trophy.gif";
+            message.embeds[0].description = `The game results are in!\n\n${leaderboardMsg}`;
+            message.embeds[0].color = 16754756;
+
+            client.currentDrawer = null;
+            break;
+
+          case 7:
+            message.embeds[0].description = "Waiting for the game to start";
+            break;
+        }
+
+        if (message.embeds[0].description === "") return;
+
+        send(message);
+      });
+
+      client.on("startError", (gameStartErr) => {
+        send({
+          username: "CommanderBox",
+          embeds: [
+            {
+              title: "System",
+              description:
+                gameStartErr === 0
+                  ? "The host needs atleast **2** players to start the game"
+                  : `The server will be restarting in ${gameStartErr.time}`,
+              color: 13520650,
+              footer: {
+                text: `Lobby ID: ${client.lobbyId} - Online Players: ${client.players.length} - CommanderBox`,
+              },
+            },
+          ],
+        });
+      });
+
+      client.on("playerGuessed", ({ player }) => {
+        send({
+          username: "CommanderBox",
+          embeds: [
+            {
+              title: "System",
+              description: `**${player.name}** guessed the word!`,
+              color: 5688871,
+              footer: {
+                text: `Lobby ID: ${client.lobbyId} - CommanderBox`,
+              },
+            },
+          ],
+        });
+      });
+
+      client.on("hintRevealed", () => {
+        send({
+          username: "CommanderBox",
+          embeds: [
+            {
+              title: "System",
+              description: `A hint was revealed!\n➸ '**${client.word.replace(
+                /_/g,
+                "﹍",
+              )}**'`,
+              color: 16754756,
+              footer: {
+                text: `Lobby ID: ${client.lobbyId} - CommanderBox`,
+              },
+              thumbnail: {
+                url: "https://skribbl.io/img/setting_5.gif",
+              },
+            },
+          ],
+        });
+      });
+      client.on("vote", ({ player, vote }) => {
+        send({
+          username: "CommanderBox",
+          embeds: [
+            {
+              title: "System",
+              description: `**${player.name}** ${
+                vote === 0 ? "disliked" : "liked"
+              } the drawing!`,
+              color: vote === 0 ? 13520650 : 5688871,
+              footer: {
+                text: `Lobby ID: ${client.lobbyId} - CommanderBox`,
+              },
+              thumbnail: {
+                url:
+                  vote === 0
+                    ? "https://i.ibb.co/Fgg0h1P/thumbsdown.gif"
+                    : "https://i.ibb.co/Ch2PW4B/thumbsup.gif",
+              },
+            },
+          ],
+        });
+      });
+
+      client.on("text", ({ player, msg }) => {
+        if (player.name === client.options.name) return;
+
+        const didGuess =
+          player.name === client.currentDrawer?.name || player.guessed;
+
+        if (msg.startsWith(prefix)) return;
+
+        // prevent auto-guessers from ruining the webhook 
+        /* for (const word of words) {
+           if (msg === word) return;
+         } */
+
+        send({
+          username: "CommanderBox",
+          embeds: [
+            {
+              title: "Chat",
+              description: `**${player.name}**: ${msg}`,
+              color: didGuess ? 8236351 : 16777215,
+              footer: {
+                text: `Lobby ID: ${client.lobbyId} - CommanderBox`,
+              },
+              thumbnail: {
+                url: "https://skribbl.io/img/setting_0.gif",
+              },
+            },
+          ],
+        });
+      });
+
+      function send(params) {
+        fetch(URL, {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(params),
+        }).catch((error) => console.error);
+      }
+
+      client.sendMessage(
+        "Relaying all chat messages to discord, you must set the webhook URL in the env file.",
+      );
+
+      setTimeout(() => {
+        client.sendMessage(
+          "It isn't recommended to do this in public lobbies just yet.",
+        );
+      }, 1200);
+    }
+  },
 };
