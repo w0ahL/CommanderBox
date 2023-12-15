@@ -52,6 +52,7 @@ The CommanderBox provides a set of commands that can be utilized within the skri
 - `help` - Display a list of available commands and their usage
 - `endGame` - End the current game (Host)
 - `draw` - Initiate a drawing event within the game to advertise the discord server (Drawer)
+- `record` - Saves the current drawing into a JSON file onto the drawings directory with a specified name.
 - `clear` - Clear the game canvas (Drawer)
 - `ban <username>` - Ban a player from the game (Host)
 
