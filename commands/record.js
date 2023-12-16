@@ -4,7 +4,7 @@ module.exports = {
   execute(data, client, prefix) {
     const fs = require("fs");
     if (data.msg.startsWith(`${prefix}record`)) {
-      const input = data.msg.split(" ")[1];
+      const input = data.msg.split(" ")[1].toLowerCase();
 
       if (!input) {
         client.sendMessage("Please specify a valid input.");

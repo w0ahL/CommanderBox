@@ -91,7 +91,7 @@ class GameClient extends Client {
   registerEventHandlers() {
     let c = this.activeClient;
     const events = [
-      "connect2",
+      "connect",
       "disconnect",
       "message",
       "playerJoin",
@@ -113,7 +113,7 @@ class GameClient extends Client {
         let resu = c?.[handleName]?.(...args);
         
         if (!c?.[handleName] && event != 'packet') {
-          console.log(`[GameEvent] Event ${event} not handled.`);
+          // console.log(`[GameEvent] Event ${event} not handled.`);
         }
       }
     ));
@@ -129,11 +129,11 @@ class GameClient extends Client {
   handleConnect() {
     let c = this.activeClient;
 
-   if (c.lobbyType === 0) {
+  /* if (c.lobbyType === 0) {
       console.log("This doesn't support public lobbies just yet.\nCheck back soon for public lobby support.");
 
       return process.exit(0);
-    }
+    } */
     
     console.log(`Connected to ${c.lobbyId}\nCurrent Player Count: ${c.players.length}`);
     c.sendMessage(`Use ${c.prefix}help to see the list of my commands.`);
