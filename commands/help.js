@@ -11,7 +11,7 @@ module.exports = {
         }, 3000)
 
         setTimeout(() => {
-          client.sendMessage(`${prefix}draw - draws the discord this was made by.`);
+          client.sendMessage(`${prefix}draw - Initiate a drawing event within the game. Needs a draw data file name.`);
           client.sendMessage(`${prefix}say - says what you want it to say`);
         }, 6000)
 

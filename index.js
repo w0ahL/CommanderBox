@@ -9,7 +9,7 @@ let prefix = process.env.PREFIX;
 function setupClient() {
   return new Client({
     name: "CommanderBox",
-    lobbyCode: ''
+    lobbyCode: 'NECCSmUt'
   });
 }
 

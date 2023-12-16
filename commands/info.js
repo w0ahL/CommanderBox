@@ -17,7 +17,7 @@ module.exports = {
 
         setTimeout(() => {
           client.sendMessage('socket-io-client version: v4.7.2');
-          client.sendMessage(`Version: v1.0.7`);
+          client.sendMessage(`Version: v1.0.8`);
         }, 9000)
 
         return;
