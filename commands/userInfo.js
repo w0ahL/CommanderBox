@@ -3,7 +3,7 @@ module.exports = {
     description: 'userInfo command',
     execute(data, client, prefix) {
       if (data.msg.startsWith(`${prefix}userinfo`)) {
-          const username = data.msg.split(' ')[1]; // Assuming that the username is the second word after the !userinfo command
+        const username = data.msg.split(' ').slice(1).join(' ');
           if (username) {
               const player = client.players.find(player => player.name.toLowerCase() === username.toLowerCase());
               if (player) {

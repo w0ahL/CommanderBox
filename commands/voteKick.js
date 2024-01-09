@@ -3,7 +3,7 @@ module.exports = {
     description: 'voteKick command',
     execute(data, client, prefix) {
       if (data.msg.toLowerCase().startsWith(`${prefix}votekick `)) {
-          const username = data.msg.split(' ')[1]; // Assuming that the username is the second word after the !votekick command
+        const username = data.msg.split(' ').slice(1).join(' '); // Assuming that the username is the second word after the !votekick command
           if (username) {
             const player = client.players.find(player => player.name.toLowerCase() === username.toLowerCase());
               if (player) {

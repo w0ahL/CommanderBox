@@ -3,7 +3,7 @@ module.exports = {
     description: 'ban command',
     execute(data, client, prefix) {
       if (data.msg.startsWith(`${prefix}ban`)) {
-          const username = data.msg.split(' ')[1];
+        const username = data.msg.split(' ').slice(1).join(' ');
           if (username) {
             const player = client.players.find(player => player.name.toLowerCase() === username.toLowerCase());
               if (player) {
