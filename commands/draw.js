@@ -32,7 +32,11 @@ module.exports = {
         console.log(error);
         if (error.message.includes(`Cannot find module`)) {
           client.sendMessage(
-            "An error occurred while processing this drawing.",
+            "This drawing doesn't exist. Check the drawings directory for all the drawings you can use.",
+          );
+        } else {
+          client.sendMessage(
+            "An error occurred while trying to pick/draw this drawing.",
           );
         }
       }
