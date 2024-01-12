@@ -1,3 +1,5 @@
+const { version } = require('../package.json');
+
 module.exports = {
     name: 'info',
     description: 'Info command',
@@ -17,7 +19,7 @@ module.exports = {
 
         setTimeout(() => {
           client.sendMessage('socket-io-client version: v4.7.2');
-          client.sendMessage(`Version: v1.0.8`);
+          client.sendMessage(`Version: v${version}`);
         }, 9000)
 
         return;

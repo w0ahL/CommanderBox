@@ -1,18 +1,18 @@
 {
   "name": "CommanderBox",
-  "version": "1.0.8",
-  "description": "",
+  "version": "1.0.9",
+  "description": "Do commands via skribbl.io chat",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "w0ahL",
   "license": "ISC",
   "dependencies": {
     "@types/node": "^18.0.6",
     "dotenv": "^16.3.1",
     "node-fetch": "^3.2.6",
-    "skribbler": "^2.3.0"
+    "skribbler": "^2.4.0"
   }
 }
