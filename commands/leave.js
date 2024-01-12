@@ -5,7 +5,7 @@ module.exports = {
       if (data.msg.startsWith(`${prefix}leave`)) {
           const randomCode = generateRandomCode();
         
-          console.log(`Enter the following code to confirm leave: ${randomCode}`);
+          console.log(`Enter the following code to confirm leave: ${randomCode}\nIf this wasn't you, you can safely ignore this message & continue on using CommanderBox.`);
 
           client.sendMessage("Enter the code that is located in the console log to confirm disconnect.")
 

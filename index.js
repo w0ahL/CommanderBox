@@ -3,7 +3,7 @@ const Client = require('./client/gameClient.js')
 function setupClient() {
   return new Client({
     name: "CommanderBox",
-    lobbyCode: ''
+    lobbyCode: 'zFCD76P5'
   });
 }
 

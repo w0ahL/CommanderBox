@@ -4,12 +4,14 @@ module.exports = {
   execute(data, client, prefix) {
     const fs = require("fs");
     if (data.msg.startsWith(`${prefix}record`)) {
-      const input = data.msg.split(" ")[1].toLowerCase();
+      const input = data.msg.split(" ");
 
-      if (!input) {
+      if (input.length < 2) {
         client.sendMessage("Please specify a valid input.");
         return;
       }
+
+      const lowerCaseInput = input[1].toLowerCase();
 
       const fileName = `${input}.json`;
 

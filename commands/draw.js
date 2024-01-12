@@ -3,12 +3,14 @@ module.exports = {
   description: "Draw command",
   execute(data, client, prefix) {
     if (data.msg.startsWith(`${prefix}draw`)) {
-        const input = data.msg.split(" ")[1].toLowerCase();
+      const input = data.msg.split(" ");
 
-      if (!input) {
+      if (input.length < 2) {
         client.sendMessage("Please specify a valid input.");
         return;
       }
+
+      const lowerCaseInput = input[1].toLowerCase();
 
       try {
         const fileName = `../drawings/${input}.json`;
