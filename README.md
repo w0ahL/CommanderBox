@@ -15,8 +15,9 @@ npm i
 3. Set up the .env file with the required environment variables, including the webhook URL and a prefix. An example .env file:
 
 ```
-WEBHOOK_URL=DISCORD WEBHOOK GOES HERE
 PREFIX=!
+LOBBY_CODE=LOBBY CODE GOES HERE
+WEBHOOK_URL=DISCORD WEBHOOK GOES HERE
 ```
 
 4. Run the bot using the following command:
@@ -37,25 +38,30 @@ Feel free to customize the bot's functionality and commands to suit your specifi
 
 The CommanderBox provides a set of commands that can be utilized within the skribbl.io game chat. These commands enhance the skribbl.io experience and facilitate game management, interaction, and moderation.
 
-- `startgame` - Start a new game (Host)
-- `vote <option>` - Initiate a vote with the specified option
-- `userInfo <username>` - Retrieve information about a specific player
-- `spam <message> <time> <cooldown>` - Initiate a spam with a specified message, duration, and cooldown time
-- `say <message>` - Send a message in the game chat
-- `ping` - Check if the bot's replying back.
+- `startgame` - Start a new game. (Host)
+- `vote <option>` - Initiate a vote with the specified option.
+- `votekick <username>` Initiate a votekick with a specified username.
+- `userinfo <username>` - Retrieve information about a specific player.
+- `spam <message> <time> <cooldown>` - Initiate a spam with a specified message, duration, and cooldown time.
+- `say <message>` - Send a message in the game chat.
+- `ping` - Check if the bot's replying back to any live messages.
 - `guess` - Automatically guesses the current word for the round.
-- `pick` - Automatically choose a word for the game (Drawer)
-- `relay` - shows skribbl.io chat inside of discord (Must provide a webhook url in .env file)
+- `pick` - Automatically choose a word for the game. (Drawer)
+- `relay` - Shows skribbl.io chat inside of discord.
 - `leave` - Disconnect from the game & host.
 - `kick <username>` - Kick a player from the game (Host)
-- `info` - Retrieve information about the game and the bot
-- `help` - Display a list of available commands and their usage
-- `endGame` - End the current game (Host)
+- `info` - Retrieve information about the game and the bot.
+- `help` - Display a list of available commands and their usage.
+- `endgame` - End the current game. (Host)
 - `draw` - Initiate a drawing event within the game. Must be drawer & need a draw data file.
 - `record` - Saves the current drawing into a JSON file onto the drawings directory with a specified name.
-- `clear` - Clear the game canvas (Drawer)
-- `ban <username>` - Ban a player from the game (Host)
+- `clear` - Clear the game canvas. (Drawer)
+- `ban <username>` - Ban a player from the game. (Host)
 
 These commands empower players to manage and control various aspects of the skribbl.io game environment, fostering an enhanced and interactive gaming experience.
 
 Feel free to explore and customize these commands to amplify the experience within skribbl.io.
+
+## License
+
+This project is licensed under the GPL-3.0 License - see the [LICENSE](LICENSE) file for details.

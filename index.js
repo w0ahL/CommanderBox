@@ -1,9 +1,11 @@
 const Client = require('./client/gameClient.js')
 
+require("dotenv").config();
+
 function setupClient() {
   return new Client({
     name: "CommanderBox",
-    lobbyCode: 'zFCD76P5'
+    lobbyCode: process.env.LOBBY_CODE
   });
 }
 
